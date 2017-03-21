@@ -263,6 +263,7 @@ DRV_GLOBAL_DATA gDrv;
 MiniFilter initialization and unload routines.
 *************************************************************************/
 
+
 NTSTATUS
 DriverEntry(
     _In_ PDRIVER_OBJECT DriverObject,
@@ -289,6 +290,7 @@ Routine can return non success error codes.
 
 --*/
 {
+	__debugbreak();
     NTSTATUS status;
 
     UNREFERENCED_PARAMETER(RegistryPath);

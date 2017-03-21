@@ -53,6 +53,7 @@ InitializeCommunication()
     RtlInitUnicodeString(&uniStr, DRIVER_PORT);
 
     // we secure the port so only ADMINs & SYSTEM can access it
+	LOG("ABOUT TO CALL:::: FltBuildDefaultSecurityDescriptor");
     status = FltBuildDefaultSecurityDescriptor(&secDesc, FLT_PORT_ALL_ACCESS);
     if (!NT_SUCCESS(status))
     {
@@ -68,6 +69,8 @@ InitializeCommunication()
         NULL,
         secDesc);
 
+	LOG("ABOUT TO CALL:::: FltCreateCommunicationPort");
+	__debugbreak();
     status = FltCreateCommunicationPort(
         gDrv.FilterHandle,
         &gDrv.DllConnServerPort,
@@ -91,7 +94,8 @@ cleanup:
     if (NULL != secDesc)
     {
         // free the security descriptor in all cases; it is not needed once the call to FltCreateCommunicationPort() is made
-        FltFreeSecurityDescriptor(secDesc);
+		LOG("ABOUT TO CALL:::: FltFreeSecurityDescriptor");
+		FltFreeSecurityDescriptor(secDesc);
         secDesc = NULL;
     }
 
@@ -127,6 +131,7 @@ ClientDisconnectCallback(
 
     UNREFERENCED_PARAMETER(ConnectionCookie);
 
+	LOG("ABOUT TO CALL:::: FltCloseClientPort");
     FltCloseClientPort(gDrv.FilterHandle, (PFLT_PORT*)&gDrv.DllConnClientPort);
     gDrv.DllConnClientPort = NULL;
 }
@@ -201,6 +206,7 @@ GetAndLogClientVersion(
     RtlZeroMemory(&clientVersionInformation, sizeof(VERSION_INFORMATION));
     clientVersionInformation.Command = cmdGetLibraryVersion;
 
+	LOG("ABOUT TO CALL:::: FltSendMessage");
     NTSTATUS status = FltSendMessage(gDrv.FilterHandle, (PFLT_PORT*)&gDrv.DllConnClientPort, &clientVersionInformation, sizeof(VERSION_INFORMATION),
         &clientVersionInformation, &replyLength, NULL);
     if (!NT_SUCCESS(status))
@@ -219,6 +225,7 @@ UninitializeCommunication()
 {
     if (NULL != gDrv.DllConnServerPort)
     {
+		LOG("ABOUT TO CALL:::: FltCloseCommunicationPort");
         FltCloseCommunicationPort(gDrv.DllConnServerPort);
         gDrv.DllConnServerPort = NULL;
     }
@@ -226,6 +233,7 @@ UninitializeCommunication()
     PFLT_PORT clientPort = (PFLT_PORT)InterlockedExchangePointer((volatile PVOID*)&gDrv.DllConnClientPort, NULL);
     if (NULL != clientPort)
     {
+		LOG("ABOUT TO CALL:::: FltCloseClientPort");
         FltCloseClientPort(gDrv.FilterHandle, &clientPort);
     }
 }
