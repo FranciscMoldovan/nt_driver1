@@ -1,0 +1,16 @@
+﻿  Building 'test1' with toolset 'WindowsApplicationForDrivers10.0' and the 'Desktop' target platform.
+  test1.cpp
+  test1.vcxproj -> C:\_sisc\dsmk\DriverFlt\bin\Win32\Debug\test1.exe
+  test1.vcxproj -> C:\_sisc\dsmk\DriverFlt\bin\Win32\Debug\test1.pdb (Full PDB)
+  "source file mask to copy: ["C:\_sisc\dsmk\DriverFlt\bin\Win32\Debug\test*"]"
+  "destination folder: [c:\_share_vm\]"
+  "symbols will be saved to location: [c:\_symbols]"
+  C:\_sisc\dsmk\DriverFlt\bin\Win32\Debug\test1.exe
+  C:\_sisc\dsmk\DriverFlt\bin\Win32\Debug\test1.ilk
+  C:\_sisc\dsmk\DriverFlt\bin\Win32\Debug\test1.pdb
+  3 File(s) copied
+  Finding ID...  0000000003
+  
+  SYMSTORE: Number of files stored = 2
+  SYMSTORE: Number of errors = 0
+  SYMSTORE: Number of files ignored = 1

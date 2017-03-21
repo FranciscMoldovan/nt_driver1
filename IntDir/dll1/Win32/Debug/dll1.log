@@ -1,0 +1,24 @@
+﻿  Building 'dll1' with toolset 'WindowsApplicationForDrivers10.0' and the 'Desktop' target platform.
+  public_api.cpp
+  dll1.cpp
+  debug.cpp
+  communication.cpp
+  Generating Code...
+     Creating library C:\_sisc\dsmk\DriverFlt\bin\Win32\Debug\dll1.lib and object C:\_sisc\dsmk\DriverFlt\bin\Win32\Debug\dll1.exp
+  dll1.vcxproj -> C:\_sisc\dsmk\DriverFlt\bin\Win32\Debug\dll1.dll
+  dll1.vcxproj -> C:\_sisc\dsmk\DriverFlt\bin\Win32\Debug\dll1.pdb (Full PDB)
+  "source file mask to copy: ["C:\_sisc\dsmk\DriverFlt\bin\Win32\Debug\dll*"]"
+  "destination folder: [c:\_share_vm\]"
+  "symbols will be saved to location: [c:\_symbols]"
+  C:\_sisc\dsmk\DriverFlt\bin\Win32\Debug\dll1.dll
+  C:\_sisc\dsmk\DriverFlt\bin\Win32\Debug\dll1.exp
+  C:\_sisc\dsmk\DriverFlt\bin\Win32\Debug\dll1.ilk
+  C:\_sisc\dsmk\DriverFlt\bin\Win32\Debug\dll1.lib
+  C:\_sisc\dsmk\DriverFlt\bin\Win32\Debug\dll1.map
+  C:\_sisc\dsmk\DriverFlt\bin\Win32\Debug\dll1.pdb
+  6 File(s) copied
+  Finding ID...  0000000002
+  
+  SYMSTORE: Number of files stored = 2
+  SYMSTORE: Number of errors = 0
+  SYMSTORE: Number of files ignored = 4
