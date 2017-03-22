@@ -119,6 +119,7 @@ ClientConnectedCallback(
 
     gDrv.DllConnClientPort = ClientPort;
 
+	
     return STATUS_SUCCESS;
 }
 
@@ -145,6 +146,7 @@ ClientReceiveMessage(
     _Out_ PULONG ReturnOutputBufferLength
 )
 {
+	__debugbreak();
     NTSTATUS status = STATUS_UNSUCCESSFUL;
     UNREFERENCED_PARAMETER(PortCookie);
     COMMAND_CODE cmdCode;
@@ -215,7 +217,7 @@ GetAndLogClientVersion(
     }
     else
     {
-        LOG("got version from UM client: Major %d Minor %d Revision %d Build %d \n", clientVersionInformation.Major, clientVersionInformation.Minor,
+        LOG("	:: ~ :: ~ :: ~ :: ~ got version from UM client: Major %d Minor %d Revision %d Build %d \n", clientVersionInformation.Major, clientVersionInformation.Minor,
             clientVersionInformation.Revision, clientVersionInformation.Build);
     }
 }
