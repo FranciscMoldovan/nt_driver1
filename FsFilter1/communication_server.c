@@ -70,7 +70,7 @@ InitializeCommunication()
         secDesc);
 
 	LOG("ABOUT TO CALL:::: FltCreateCommunicationPort");
-	__debugbreak();
+	//__debugbreak();
     status = FltCreateCommunicationPort(
         gDrv.FilterHandle,
         &gDrv.DllConnServerPort,

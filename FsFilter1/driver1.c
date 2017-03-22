@@ -290,7 +290,7 @@ Routine can return non success error codes.
 
 --*/
 {
-	__debugbreak();
+	//__debugbreak();
     NTSTATUS status;
 
     UNREFERENCED_PARAMETER(RegistryPath);
