@@ -25,6 +25,13 @@ DexTestCommand(void)
     return TestCommand();
 }
 
+DLL_API
+__int32
+DexToggleProcessMonitoring(void)
+{
+	return ToggleProcessMonitoring();
+}
+
 //
 // DexQueryDriver
 //

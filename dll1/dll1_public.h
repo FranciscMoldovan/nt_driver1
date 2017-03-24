@@ -41,7 +41,16 @@ extern "C" {
             );
     typedef   FUNC_DexTestCommand*   PFUNC_DexTestCommand;
 
-    DLL_API   FUNC_DexTestCommand    DexTestCommand;
+	DLL_API   FUNC_DexTestCommand    DexTestCommand;
+
+	typedef
+		__int32
+		(__cdecl FUNC_DexToggleProcessMonitoring)(
+			void
+			);
+	typedef FUNC_DexToggleProcessMonitoring* PFUNC_DexToggleProcessMonitoring;
+
+    DLL_API   FUNC_DexToggleProcessMonitoring    DexToggleProcessMonitoring;
 
 
 

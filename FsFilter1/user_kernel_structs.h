@@ -13,7 +13,8 @@ extern "C"
     typedef enum _COMMAND_CODE
     {
         cmdGetLibraryVersion = 0,                                    // driver --> library --> driver
-        cmdTestWithReply	     		                             // library --> driver --> library
+        cmdTestWithReply,	     		                             // library --> driver --> 
+		cmdToggleProcmon
     } COMMAND_CODE, *PCOMMAND_CODE;
 
     typedef struct _CMD_TEST_WITH_REPLY
@@ -22,6 +23,11 @@ extern "C"
         __int32         ReplyFromKernel;
     }CMD_TEST_WITH_REPLY, *PCMD_TEST_WITH_REPLY;
 
+	typedef struct _CMD_PROCMON_WITH_REPLY
+	{
+		COMMAND_CODE	Command;									
+		__int32			ReplyFromKernel;							
+	}CMD_PROCMON_WITH_REPLY, *PCMD_PROCMON_WITH_REPLY;
 
     typedef struct _COMMAND_REQUEST
     {

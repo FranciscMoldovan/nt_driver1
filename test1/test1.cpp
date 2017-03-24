@@ -12,6 +12,7 @@ int main()
     PFUNC_InitializeDriverLibrary InitializeDriverLibrary;
     PFUNC_UninitializeDriverLibrary UninitializeDriverLibrary;
     PFUNC_DexTestCommand TestCommand;
+	PFUNC_DexToggleProcessMonitoring ToggleProcessMonitoring;
 
     if (NULL == dllModule)
     {
@@ -43,6 +44,13 @@ int main()
         return -1;
     }
 
+	ToggleProcessMonitoring = (PFUNC_DexToggleProcessMonitoring)GetProcAddress(dllModule, "DexToggleProcessMonitoring");
+	if (NULL == ToggleProcessMonitoring)
+	{
+		cout << "failed loading DexToggleProcessMonitoring \n";
+		return -1;
+	}
+
     while (true)
     {
         string command;
@@ -58,6 +66,11 @@ int main()
         {
             TestCommand();
         }
+
+		if (command == "toggleproc")
+		{
+			ToggleProcessMonitoring();
+		}
     }
 
     UninitializeDriverLibrary();

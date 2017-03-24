@@ -13,4 +13,7 @@ UninitializeCommunication();
 __int32
 TestCommand();
 
+__int32
+ToggleProcessMonitoring();
+
 #endif //_COMMUNICATION_H_

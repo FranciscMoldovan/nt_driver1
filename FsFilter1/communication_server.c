@@ -179,8 +179,36 @@ ClientReceiveMessage(
 
             GetAndLogClientVersion();
             
-        }
-        break;
+        }break;
+
+	   case cmdToggleProcmon:
+	   {
+		   PCMD_PROCMON_WITH_REPLY cmd = (PCMD_PROCMON_WITH_REPLY)InputBuffer;
+		   PCMD_PROCMON_WITH_REPLY cmdReply = (PCMD_PROCMON_WITH_REPLY)OutputBuffer;
+
+		   (void)cmd;
+
+		   if ((NULL == OutputBuffer) || (OutputBufferLength < sizeof(CMD_PROCMON_WITH_REPLY)) ||
+			   (InputBufferLength < sizeof(CMD_PROCMON_WITH_REPLY)))
+		   {
+			   LOG("status invalid parameter for received message type 0x%x \n", cmdCode);
+			   status = STATUS_INVALID_PARAMETER;
+			   break;
+		   }
+
+		   DrvInitializeProcNotify();
+
+		   cmdReply->ReplyFromKernel = 0xDEADDEAD;
+		   status = STATUS_SUCCESS;
+
+		   *ReturnOutputBufferLength = sizeof(CMD_PROCMON_WITH_REPLY);
+
+
+	   }break;
+
+        
+
+	//  case cmdTogg
 
         default:
             LOG("ERROR: unrecognized command code %d\n", cmdCode);

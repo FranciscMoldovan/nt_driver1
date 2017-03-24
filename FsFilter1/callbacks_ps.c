@@ -37,7 +37,7 @@ DrvInitializeProcNotify(
         LOG("WARNING: DrvInitializeProcNotify called, but already initialized\n");
         return STATUS_OBJECT_NAME_EXISTS;          
     }
-	__debugbreak();
+	//__debugbreak();
 	LOG("::::::::::C A L L I N G  T H A T  S P E C I A L  F U N C T I O N!!!");
     status = PsSetCreateProcessNotifyRoutineEx(
                     DrvProcessNotifyRoutineEx,
@@ -111,6 +111,13 @@ DrvProcessNotifyRoutineCommon(
 			ParentId, ParentId,
 			PsGetCurrentThreadId()));
     }
+
+	//FltSendMessage()
+
+	///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   
+
+	///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   
+
 
     if (!Create)
     {

@@ -29,6 +29,7 @@ DriverUnload(
 
 CONST FLT_OPERATION_REGISTRATION Callbacks[] = {
 
+#if 0
 // TODO - List all of the requests to filter.
 	{ IRP_MJ_CREATE,
     0,
@@ -225,7 +226,7 @@ CONST FLT_OPERATION_REGISTRATION Callbacks[] = {
     PreOperation,
     PostOperation },
 
- // TODO
+#endif // TODO
 
     { IRP_MJ_OPERATION_END }
 };

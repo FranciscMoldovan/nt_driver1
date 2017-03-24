@@ -309,3 +309,46 @@ TestCommand()
 
     return status;
 }
+
+__int32
+ToggleProcessMonitoring()
+{
+	__debugbreak();
+	NTSTATUS status;
+	CMD_PROCMON_WITH_REPLY structProcmon;
+	DWORD bytesReturned;
+	HRESULT result;
+
+	structProcmon.Command = cmdToggleProcmon;
+	status = STATUS_UNSUCCESSFUL;
+
+	// Check connectivity to driver:
+	if (NULL == gDllConnFilterPort)
+	{
+		LogPrint("ERROR: driver1 NOT running\n");
+		return STATUS_NOT_FOUND;
+	}
+
+	// effectively send message to the driver
+	result = FilterSendMessage(
+		gDllConnFilterPort,
+		&structProcmon,
+		sizeof(CMD_TEST_WITH_REPLY),
+		&structProcmon,
+		sizeof(CMD_TEST_WITH_REPLY),
+		&bytesReturned);
+
+	if (S_OK == result)
+	{
+		LogPrint("Got %x from driver \n", structProcmon.ReplyFromKernel);
+		status = STATUS_SUCCESS;
+	}
+	else
+	{
+		LogPrint("ERROR: invalid result code for FilterSendMessage 0x%08x\n", result);
+
+		status = STATUS_UNSUCCESSFUL;
+	}
+	return status;
+}
+
