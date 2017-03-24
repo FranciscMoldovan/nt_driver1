@@ -8,7 +8,7 @@ Signature   = "$Windows NT$"
 Class       = "Antivirus"                         ;This is determined by the work this filter driver does
 ClassGuid   = {b1d1a169-c54f-4379-81db-bee7d88d7454}
 Provider    = %ManufacturerName%
-DriverVer=03/24/2017,9.41.44.42
+DriverVer=03/24/2017,22.43.32.211
 CatalogFile = driver1.cat
 
 [DestinationDirs]

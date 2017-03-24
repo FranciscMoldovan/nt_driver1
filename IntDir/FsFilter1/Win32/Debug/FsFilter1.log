@@ -1,5 +1,5 @@
 ﻿  Building 'FsFilter1' with toolset 'WindowsKernelModeDriver10.0' and the 'Desktop' target platform.
-  Stamping C:\_sisc\dsmk\DriverFlt\IntDir\FsFilter1\Win32\Debug\driver1.inf [Version] section with DriverVer=03/24/2017,9.41.44.42
+  Stamping C:\_sisc\dsmk\DriverFlt\IntDir\FsFilter1\Win32\Debug\driver1.inf [Version] section with DriverVer=03/24/2017,22.43.32.211
   minifilter_callbacks.c
   callbacks_ps.c
   communication_server.c
@@ -33,7 +33,7 @@
   C:\_sisc\dsmk\DriverFlt\bin\Win32\Debug\driver1.pdb
   C:\_sisc\dsmk\DriverFlt\bin\Win32\Debug\driver1.sys
   4 File(s) copied
-  Finding ID...  0000000035
+  Finding ID...  0000000068
   
   SYMSTORE: Number of files stored = 1
   SYMSTORE: Number of errors = 1
