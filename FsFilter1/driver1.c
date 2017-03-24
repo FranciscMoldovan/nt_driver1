@@ -29,8 +29,8 @@ DriverUnload(
 
 CONST FLT_OPERATION_REGISTRATION Callbacks[] = {
 
-#if 0 // TODO - List all of the requests to filter.
-    { IRP_MJ_CREATE,
+// TODO - List all of the requests to filter.
+	{ IRP_MJ_CREATE,
     0,
     PreOperation,
     PostOperation },
@@ -225,7 +225,7 @@ CONST FLT_OPERATION_REGISTRATION Callbacks[] = {
     PreOperation,
     PostOperation },
 
-#endif // TODO
+ // TODO
 
     { IRP_MJ_OPERATION_END }
 };
@@ -258,6 +258,30 @@ CONST FLT_REGISTRATION FilterRegistration = {
 
 
 DRV_GLOBAL_DATA gDrv;
+
+void ProcessNotifyRoutine(
+	_In_        HANDLE                 ParentId,
+	_In_        HANDLE                 ProcessId,
+	_Inout_opt_ PPS_CREATE_NOTIFY_INFO CreateInfo
+)
+{
+	NTSTATUS status = STATUS_SUCCESS;
+
+	UNREFERENCED_PARAMETER(ParentId);
+	UNREFERENCED_PARAMETER(status);
+
+	LOG("******* SetCreateProcessNotifyRoutineEx entry\n");
+
+	if (CreateInfo != NULL)
+	{
+		LOG("ProcessId = %d\n", ProcessId);
+		LOG("ImageFileName = %wZ\n", CreateInfo->ImageFileName);
+		LOG("CommandLine = %wZ\n", CreateInfo->CommandLine);
+	}
+
+	LOG("******* SetCreateProcessNotifyRoutineEx exit \n");
+}
+
 
 /*************************************************************************
 MiniFilter initialization and unload routines.

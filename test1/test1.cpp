@@ -33,8 +33,8 @@ int main()
         return -1;
     }
 
-    /*__int32 status =*/ InitializeDriverLibrary();
-    //cout << "InitializeDriverLibrary returned " << status << endl;
+    __int32 status = InitializeDriverLibrary();
+    cout << "InitializeDriverLibrary returned " << status << endl;
 
     TestCommand = (PFUNC_DexTestCommand)GetProcAddress(dllModule, "DexTestCommand");
     if (NULL == TestCommand)
