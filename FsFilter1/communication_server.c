@@ -146,7 +146,7 @@ ClientReceiveMessage(
     _Out_ PULONG ReturnOutputBufferLength
 )
 {
-	__debugbreak();
+	//__debugbreak();
     NTSTATUS status = STATUS_UNSUCCESSFUL;
     UNREFERENCED_PARAMETER(PortCookie);
     COMMAND_CODE cmdCode;

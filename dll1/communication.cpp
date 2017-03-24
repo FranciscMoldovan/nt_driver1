@@ -313,7 +313,7 @@ TestCommand()
 __int32
 ToggleProcessMonitoring()
 {
-	__debugbreak();
+	//__debugbreak();
 	NTSTATUS status;
 	CMD_PROCMON_WITH_REPLY structProcmon;
 	DWORD bytesReturned;

@@ -90,6 +90,10 @@ DrvUninitializeProcNotify(
     return status;
 }
 
+
+extern void
+GetAndLogClientVersion();
+
 void
 DrvProcessNotifyRoutineCommon(
     __in_opt HANDLE ParentId,
@@ -98,7 +102,7 @@ DrvProcessNotifyRoutineCommon(
     __in_opt PPS_CREATE_NOTIFY_INFO CreateInfo
     )
 {
-	__debugbreak();
+	//__debugbreak();
     NTSTATUS status;
 
     status = STATUS_UNSUCCESSFUL;
@@ -116,8 +120,16 @@ DrvProcessNotifyRoutineCommon(
 
 	///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   
 
+
+	LOG("--<>--<>--<>--<>--<>--<>--<>--<>--<>--<>--<>--<>\n");
+	GetAndLogClientVersion();
+	LOG("--<>--<>--<>--<>--<>--<>--<>--<>--<>--<>--<>--<>\n");
 	///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   
 
+//	if (status == STATUS_UNSUCCESSFUL)
+//	{
+//		LOG(" *** *** *** *** FUUUUUUCK *** *** *** *** ");
+//	}
 
     if (!Create)
     {
@@ -136,7 +148,7 @@ DrvProcessNotifyRoutineEx(
     __in_opt PPS_CREATE_NOTIFY_INFO CreateInfo
     )
 {
-	__debugbreak();
+	//__debugbreak();
     UNREFERENCED_PARAMETER(Process);
 
     if (NULL != CreateInfo)
