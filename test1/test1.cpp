@@ -67,9 +67,14 @@ int main()
             TestCommand();
         }
 
-		if (command == "toggleproc")
+		if (command == "procmon_on")
 		{
-			ToggleProcessMonitoring();
+			ToggleProcessMonitoring(1);
+		}
+
+		if (command == "procmon_off")
+		{
+			ToggleProcessMonitoring(0);
 		}
     }
 

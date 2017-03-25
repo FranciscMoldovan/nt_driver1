@@ -185,7 +185,8 @@ ClientReceiveMessage(
             
         }break;
 
-	   case cmdToggleProcmon:
+		// TODO
+	   case cmdEnableProcmon:
 	   {
 		   PCMD_PROCMON_WITH_REPLY cmd = (PCMD_PROCMON_WITH_REPLY)InputBuffer;
 		   PCMD_PROCMON_WITH_REPLY cmdReply = (PCMD_PROCMON_WITH_REPLY)OutputBuffer;
@@ -202,17 +203,36 @@ ClientReceiveMessage(
 
 		   DrvInitializeProcNotify();
 
+		   cmdReply->ReplyFromKernel = 0xB00BB00B;
+		   status = STATUS_SUCCESS;
+
+		   *ReturnOutputBufferLength = sizeof(CMD_PROCMON_WITH_REPLY);
+	   }break;
+
+	   // TODO
+	   case cmdDisableProcmon:
+	   {
+		   PCMD_PROCMON_WITH_REPLY cmd = (PCMD_PROCMON_WITH_REPLY)InputBuffer;
+		   PCMD_PROCMON_WITH_REPLY cmdReply = (PCMD_PROCMON_WITH_REPLY)OutputBuffer;
+
+		   (void)cmd;
+
+		   if ((NULL == OutputBuffer) || (OutputBufferLength < sizeof(CMD_PROCMON_WITH_REPLY)) ||
+			   (InputBufferLength < sizeof(CMD_PROCMON_WITH_REPLY)))
+		   {
+			   LOG("status invalid parameter for received message type 0x%x \n", cmdCode);
+			   status = STATUS_INVALID_PARAMETER;
+			   break;
+		   }
+
+		   DrvUninitializeProcNotify();
+
 		   cmdReply->ReplyFromKernel = 0xDEADDEAD;
 		   status = STATUS_SUCCESS;
 
 		   *ReturnOutputBufferLength = sizeof(CMD_PROCMON_WITH_REPLY);
-
-
 	   }break;
 
-        
-
-	//  case cmdTogg
 
         default:
             LOG("ERROR: unrecognized command code %d\n", cmdCode);
@@ -260,6 +280,7 @@ LogProcessInfo(
 	char name[]
 )
 {
+	__debugbreak();
 	(void)name;
 	PROC_INFO procInfo;
 	
@@ -278,7 +299,7 @@ LogProcessInfo(
 	}
 	else
 	{
-		LOG("DACIA MEA SUPER NOVA");
+		LOG("LOG PROCESS INFO\n");
 	}
 
 }

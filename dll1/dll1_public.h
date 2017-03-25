@@ -43,10 +43,11 @@ extern "C" {
 
 	DLL_API   FUNC_DexTestCommand    DexTestCommand;
 
+#include <stdint.h>
 	typedef
 		__int32
 		(__cdecl FUNC_DexToggleProcessMonitoring)(
-			void
+			unsigned char onOrOff
 			);
 	typedef FUNC_DexToggleProcessMonitoring* PFUNC_DexToggleProcessMonitoring;
 

@@ -27,9 +27,9 @@ DexTestCommand(void)
 
 DLL_API
 __int32
-DexToggleProcessMonitoring(void)
+DexToggleProcessMonitoring(unsigned char onOrOff)
 {
-	return ToggleProcessMonitoring();
+	return ToggleProcessMonitoring(onOrOff);
 }
 
 //

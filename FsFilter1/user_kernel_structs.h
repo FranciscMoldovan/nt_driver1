@@ -9,12 +9,13 @@ extern "C"
 #endif
 
 #define DRIVER_PORT   L"\\DSMKPort"
-
+	// TODO
     typedef enum _COMMAND_CODE
     {
         cmdGetLibraryVersion = 0,                                    // driver --> library --> driver
         cmdTestWithReply,	     		                             // library --> driver --> 
-		cmdToggleProcmon, 
+		cmdEnableProcmon,
+		cmdDisableProcmon,
 		cmdGiveProcname
     } COMMAND_CODE, *PCOMMAND_CODE;
 

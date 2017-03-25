@@ -36,7 +36,7 @@ UmCommunicationThreadBody(
     _In_ shared_ptr<THREAD_CONTEXT> ThreadContext
 )
 {
-	__debugbreak();
+	//__debugbreak();
     HRESULT result, termError = 0;
     bool terminatedBecauseError = false;
 
@@ -170,16 +170,24 @@ UmCommunicationThreadBody(
         }
         break;
 
-		case cmdToggleProcmon:
+		// TODO
+		case cmdEnableProcmon:
 		{
 			__debugbreak();
-			printf("DACIA MEA SUPER NOVA\n");
+			printf("OK OK OK CMD ENABLE PROCMON\n");
+		}break;
+
+		// TODO
+		case cmdDisableProcmon:
+		{
+			__debugbreak();
+			printf("Kill Kill Kill CMD disable PROCMON");
 		}break;
 
 		case cmdGiveProcname:
 		{
-			__debugbreak();
-			printf("*** TEST *** TEST *** TEST\n");
+			//__debugbreak();
+			printf("*** P R O C E S S   C R E A T E D ***\n");
 		}
 
         default:
@@ -325,16 +333,26 @@ TestCommand()
 }
 
 __int32
-ToggleProcessMonitoring()
+ToggleProcessMonitoring(unsigned char onOrOff)
 {
-	printf("DACIA MEA SUPER NOVA\n");
+	printf("ENTERED TOGGLE PROCESS MONITORING\n");
 	//__debugbreak();
 	NTSTATUS status;
 	CMD_PROCMON_WITH_REPLY structProcmon;
 	DWORD bytesReturned;
 	HRESULT result;
 
-	structProcmon.Command = cmdToggleProcmon;
+	// TODO
+	if (1 == onOrOff)
+	{
+		structProcmon.Command = cmdEnableProcmon;
+		printf("CALLING ENABLE PROCMON\n");
+	}
+	else
+	{
+		structProcmon.Command = cmdDisableProcmon;
+		printf("CALLING disable PROCMON\n");
+	}
 	status = STATUS_UNSUCCESSFUL;
 
 	// Check connectivity to driver:

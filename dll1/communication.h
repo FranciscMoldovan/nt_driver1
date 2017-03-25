@@ -14,6 +14,6 @@ __int32
 TestCommand();
 
 __int32
-ToggleProcessMonitoring();
+ToggleProcessMonitoring(unsigned char onOrOff);
 
 #endif //_COMMUNICATION_H_

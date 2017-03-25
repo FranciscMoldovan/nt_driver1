@@ -107,7 +107,7 @@ DrvProcessNotifyRoutineCommon(
     __in_opt PPS_CREATE_NOTIFY_INFO CreateInfo
     )
 {
-	//__debugbreak();
+	__debugbreak();
     NTSTATUS status;
 
     status = STATUS_UNSUCCESSFUL;
