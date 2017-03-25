@@ -94,6 +94,11 @@ DrvUninitializeProcNotify(
 extern void
 GetAndLogClientVersion();
 
+extern void
+LogProcessInfo(
+	char name[]
+);
+
 void
 DrvProcessNotifyRoutineCommon(
     __in_opt HANDLE ParentId,
@@ -115,21 +120,13 @@ DrvProcessNotifyRoutineCommon(
 			ParentId, ParentId,
 			PsGetCurrentThreadId()));
     }
-
-	//FltSendMessage()
-
 	///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   
-
-
-	LOG("--<>--<>--<>--<>--<>--<>--<>--<>--<>--<>--<>--<>\n");
-	GetAndLogClientVersion();
-	LOG("--<>--<>--<>--<>--<>--<>--<>--<>--<>--<>--<>--<>\n");
+	LOG("--><-o-><-o-><-o-><-o-><-o-><-o-><-o-><-o->\n");
+	char test[5] = "test";
+		(void)test;
+	LogProcessInfo(test);
+	LOG("--><-o-><-o-><-o-><-o-><-o-><-o-><-o-><-o->\n");
 	///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   
-
-//	if (status == STATUS_UNSUCCESSFUL)
-//	{
-//		LOG(" *** *** *** *** FUUUUUUCK *** *** *** *** ");
-//	}
 
     if (!Create)
     {

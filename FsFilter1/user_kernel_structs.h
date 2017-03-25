@@ -14,7 +14,8 @@ extern "C"
     {
         cmdGetLibraryVersion = 0,                                    // driver --> library --> driver
         cmdTestWithReply,	     		                             // library --> driver --> 
-		cmdToggleProcmon
+		cmdToggleProcmon, 
+		cmdGiveProcname
     } COMMAND_CODE, *PCOMMAND_CODE;
 
     typedef struct _CMD_TEST_WITH_REPLY
@@ -43,6 +44,14 @@ extern "C"
         __int32                 Revision;
         __int32                 Build;
     }VERSION_INFORMATION, *PVERSION_INFORMATION;
+
+
+	typedef struct _PROC_INFO
+	{
+		COMMAND_CODE		Command;
+		char				ImageFileName[200];
+	}PROC_INFO, *PPROC_INFO;
+
 
     typedef struct _VERSION_INFORMATION_REPLY
     {

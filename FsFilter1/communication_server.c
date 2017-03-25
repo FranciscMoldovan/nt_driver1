@@ -7,6 +7,10 @@ extern DRV_GLOBAL_DATA gDrv;
 void
 GetAndLogClientVersion();
 
+void
+LogProcessInfo(
+	char name[]
+);
 
 NTSTATUS
 ClientReceiveMessage(
@@ -248,6 +252,35 @@ GetAndLogClientVersion(
         LOG("	:: ~ :: ~ :: ~ :: ~ got version from UM client: Major %d Minor %d Revision %d Build %d \n", clientVersionInformation.Major, clientVersionInformation.Minor,
             clientVersionInformation.Revision, clientVersionInformation.Build);
     }
+}
+
+#include<stdlib.h>
+void
+LogProcessInfo(
+	char name[]
+)
+{
+	(void)name;
+	PROC_INFO procInfo;
+	
+	RtlZeroMemory(&procInfo, sizeof(PPROC_INFO));
+	memcpy(&procInfo.ImageFileName, "TEST TEST TEST", 200);
+	
+	procInfo.Command = cmdGiveProcname;
+
+	ULONG replyLength = sizeof(PPROC_INFO);
+	NTSTATUS status = FltSendMessage(gDrv.FilterHandle, (PFLT_PORT*)&gDrv.DllConnClientPort, &procInfo, sizeof(PROC_INFO),
+		&procInfo, &replyLength, NULL);
+		
+	if (!NT_SUCCESS(status))
+	{
+		LOG_ERROR("FltSendMessage failed with status 0x%x \n", status);
+	}
+	else
+	{
+		LOG("DACIA MEA SUPER NOVA");
+	}
+
 }
 
 void

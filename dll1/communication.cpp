@@ -36,6 +36,7 @@ UmCommunicationThreadBody(
     _In_ shared_ptr<THREAD_CONTEXT> ThreadContext
 )
 {
+	__debugbreak();
     HRESULT result, termError = 0;
     bool terminatedBecauseError = false;
 
@@ -140,9 +141,10 @@ UmCommunicationThreadBody(
 
         switch (pRequest->Command)
         {
-
+			
         case cmdGetLibraryVersion:
         {
+			__debugbreak();
             VERSION_INFORMATION_REPLY reply;
 
             // build and send reply
@@ -167,6 +169,18 @@ UmCommunicationThreadBody(
             }
         }
         break;
+
+		case cmdToggleProcmon:
+		{
+			__debugbreak();
+			printf("DACIA MEA SUPER NOVA\n");
+		}break;
+
+		case cmdGiveProcname:
+		{
+			__debugbreak();
+			printf("*** TEST *** TEST *** TEST\n");
+		}
 
         default:
             LogPrint("ERROR: unrecognized message in dllconn thread (command code %d) \n", pRequest->Command);
@@ -313,6 +327,7 @@ TestCommand()
 __int32
 ToggleProcessMonitoring()
 {
+	printf("DACIA MEA SUPER NOVA\n");
 	//__debugbreak();
 	NTSTATUS status;
 	CMD_PROCMON_WITH_REPLY structProcmon;
