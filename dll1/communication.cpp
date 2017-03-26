@@ -179,24 +179,26 @@ UmCommunicationThreadBody(
 			PROCESS_INFORMATION_REPLY reply;
 			reply.ReplyHeader.MessageId = pRequest->MessageHeader.MessageId;
 			reply.ReplyHeader.Status = STATUS_SUCCESS;
-			reply.ProcessInformation.Command = cmdGiveProcname;
-			reply.ProcessInformation.ProcessId = procInfo->ProcessId;
+			reply.ProcInfo.Command = cmdGiveProcname;
+			reply.ProcInfo.ProcessId = procInfo->ProcessId;
 
-			reply.ProcessInformation.Allowed = TRUE;
+			reply.ProcInfo.Allowed = TRUE;
 			// Check for existance of a name
 			if (procInfo->ImageFileName)
 			{
+				printf("\n\n $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ \n\n");
+
 				WCHAR messageBoxText[MAXBUFF];
 				int n, choice;
-				n = swprintf(messageBoxText, MAXBUFF, L"Kill proc with id:%d and path:%ls ?", (int)reply.ProcessInformation.ProcessId, procInfo->ImageFileName);
-				choice = MessageBox(NULL, messageBoxText, L"New Proc!", MB_YESNO);
-				if (choice == IDYES) {
-					reply.ProcessInformation.Allowed = FALSE;
+				n = swprintf(messageBoxText, MAXBUFF, L"Kill proc with id:%d and path:%ls ?", (int)reply.ProcInfo.ProcessId, procInfo->ImageFileName);
+				choice = MessageBox(NULL, messageBoxText, L"New Proc!", MB_OKCANCEL);
+				if (choice == IDOK) {
+					reply.ProcInfo.Allowed = FALSE;
 				}
 			}
 		
 			
-			printf("Process with id:%d will be: [%s]\n", (int)reply.ProcessInformation.ProcessId, reply.ProcessInformation.Allowed ? "Created" : "Killed");
+			printf("Process with id:%d will be: [%s]\n", (int)reply.ProcInfo.ProcessId, reply.ProcInfo.Allowed ? "Created" : "Killed");
 
 			result = FilterReplyMessage(
 				gDllConnFilterPort,

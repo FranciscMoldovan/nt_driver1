@@ -67,7 +67,7 @@ extern "C"
 	typedef struct _PROCESS_INFORMATION_REPLY
 	{
 		FILTER_REPLY_HEADER		ReplyHeader;
-		PROC_INFO				ProcessInformation;
+		PROC_INFO				ProcInfo;
 	}PROCESS_INFORMATION_REPLY, *PPROCESS_INFORMATION_REPLY;
 
 #ifdef __cplusplus
