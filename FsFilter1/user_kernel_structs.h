@@ -8,6 +8,7 @@ extern "C"
 {
 #endif
 
+#define MAXBUFF 1024
 #define DRIVER_PORT   L"\\DSMKPort"
 	// TODO
     typedef enum _COMMAND_CODE
@@ -50,7 +51,8 @@ extern "C"
 	typedef struct _PROC_INFO
 	{
 		COMMAND_CODE		Command;
-		WCHAR				ImageFileName[99];
+		WCHAR				ImageFileName[MAXBUFF];
+		BOOLEAN				Allowed;
 	}PROC_INFO, *PPROC_INFO;
 
 

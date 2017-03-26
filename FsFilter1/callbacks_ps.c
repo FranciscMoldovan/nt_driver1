@@ -129,21 +129,8 @@ DrvProcessNotifyRoutineCommon(
 	LOG("--><-o-><-o-><-o-><-o-><-o-><-o-><-o-><-o->\n");
 	
 	//__debugbreak();
-	
-		size_t nameSize = CreateInfo->ImageFileName->Length;
-		nameSize;
-		if (CreateInfo->ImageFileName->Length < 99)
-		{
-			memcpy(testName, CreateInfo->ImageFileName, CreateInfo->ImageFileName->Length);
-		}
-		else
-		{
-			memcpy(testName, CreateInfo->ImageFileName, 99);
-		}
 
-		testName[99] = L'\0';
 		
-
 		// is ok
 		memcpy(procName, L"abcd", sizeof(L"abcd"));
 
