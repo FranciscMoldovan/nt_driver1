@@ -144,14 +144,12 @@ UmCommunicationThreadBody(
 			
         case cmdGetLibraryVersion:
         {
-			__debugbreak();
+			//__debugbreak();
             VERSION_INFORMATION_REPLY reply;
-
             // build and send reply
             reply.ReplyHeader.MessageId = pRequest->MessageHeader.MessageId;
             reply.ReplyHeader.Status = STATUS_SUCCESS;
             reply.VersionInformation.Command = cmdGetLibraryVersion;
-
             reply.VersionInformation.Major = 0;
             reply.VersionInformation.Minor = 0;
             reply.VersionInformation.Revision = 0;
@@ -161,7 +159,6 @@ UmCommunicationThreadBody(
                 gDllConnFilterPort,
                 &reply.ReplyHeader,
                 sizeof(FILTER_REPLY_HEADER) + sizeof(VERSION_INFORMATION));
-
             if (S_OK != result)
             {
                 LogPrint("ERROR: invalid result code for FilterReplyMessage 0x%08x \n",
@@ -170,25 +167,51 @@ UmCommunicationThreadBody(
         }
         break;
 
+		case cmdGiveProcname:
+		{
+			__debugbreak();
+			printf("\nABOUT TO ENTER THE ONLY BREAKPOINT!!!\n");
+
+
+			
+			PPROC_INFO procInfo = (PPROC_INFO)&pRequest->Command;
+			procInfo;
+			printf("NAAAME = %c", procInfo->ImageFileName);
+
+
+			PROCESS_INFORMATION_REPLY reply;
+			reply.ReplyHeader.MessageId = pRequest->MessageHeader.MessageId;
+			reply.ReplyHeader.Status = STATUS_SUCCESS;
+			reply.ProcessInformation.Command = cmdGiveProcname;
+			reply.ProcessInformation.ImageFileName = 'a';
+			result = FilterReplyMessage(
+				gDllConnFilterPort,
+				&reply.ReplyHeader,
+				sizeof(FILTER_REPLY_HEADER) + sizeof(PROC_INFO));
+			if (S_OK != result)
+			{
+				LogPrint("ERROR: invalid result code for FilterReplyMessage 0x%08x \n",
+					result);
+			}
+		}break;
+			
 		// TODO
 		case cmdEnableProcmon:
 		{
-			__debugbreak();
-			printf("OK OK OK CMD ENABLE PROCMON\n");
+			//__debugbreak();
+			//PROCESS_INFORMATION_REPLY reply;
+			// build and send reply
+			// reply
 		}break;
 
 		// TODO
 		case cmdDisableProcmon:
 		{
-			__debugbreak();
+			//__debugbreak();
 			printf("Kill Kill Kill CMD disable PROCMON");
 		}break;
 
-		case cmdGiveProcname:
-		{
-			//__debugbreak();
-			printf("*** P R O C E S S   C R E A T E D ***\n");
-		}
+		
 
         default:
             LogPrint("ERROR: unrecognized message in dllconn thread (command code %d) \n", pRequest->Command);

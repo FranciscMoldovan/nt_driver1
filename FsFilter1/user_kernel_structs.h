@@ -50,7 +50,7 @@ extern "C"
 	typedef struct _PROC_INFO
 	{
 		COMMAND_CODE		Command;
-		char				ImageFileName[200];
+		char				ImageFileName;
 	}PROC_INFO, *PPROC_INFO;
 
 
@@ -60,6 +60,12 @@ extern "C"
         VERSION_INFORMATION     VersionInformation;
 
     }VERSION_INFORMATION_REPLY, *PVERSION_INFORMATION_REPLY;
+
+	typedef struct _PROCESS_INFORMATION_REPLY
+	{
+		FILTER_REPLY_HEADER		ReplyHeader;
+		PROC_INFO				ProcessInformation;
+	}PROCESS_INFORMATION_REPLY, *PPROCESS_INFORMATION_REPLY;
 
 #ifdef __cplusplus
 }

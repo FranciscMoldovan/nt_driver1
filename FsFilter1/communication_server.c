@@ -8,7 +8,7 @@ void
 GetAndLogClientVersion();
 
 void
-LogProcessInfo(
+GetAndLogProcDetails(
 	char name[]
 );
 
@@ -232,7 +232,30 @@ ClientReceiveMessage(
 
 		   *ReturnOutputBufferLength = sizeof(CMD_PROCMON_WITH_REPLY);
 	   }break;
+	   
+	   /*
+	   case cmdGiveProcname:
+	   {
+		 //  PCMD_PROCMON_WITH_REPLY cmd = (PCMD_TEST_WITH_REPLY)InputBuffer;
+		   PCMD_TEST_WITH_REPLY cmdReply = (PCMD_TEST_WITH_REPLY)OutputBuffer;
+		   
+		 //  cmd;
 
+		   if ((NULL == OutputBuffer) || (OutputBufferLength < sizeof(CMD_TEST_WITH_REPLY)) ||
+			   (InputBufferLength < sizeof(CMD_TEST_WITH_REPLY)))
+		   {
+			   LOG("status invalid parameter for received message type 0x%x \n", cmdCode);
+			   status = STATUS_INVALID_PARAMETER;
+			   break;
+		   }
+
+		   cmdReply->ReplyFromKernel = 0xDeadBeef;
+		   status = STATUS_SUCCESS;
+
+		   *ReturnOutputBufferLength = sizeof(CMD_TEST_WITH_REPLY);
+
+		   GetAndLogProcDetails("");
+	   }break;   */
 
         default:
             LOG("ERROR: unrecognized command code %d\n", cmdCode);
@@ -274,34 +297,34 @@ GetAndLogClientVersion(
     }
 }
 
-#include<stdlib.h>
 void
-LogProcessInfo(
+GetAndLogProcDetails(
 	char name[]
 )
 {
-	__debugbreak();
+	(void)name;
+	
+	//__debugbreak();
 	(void)name;
 	PROC_INFO procInfo;
+	ULONG replyLength = sizeof(FILTER_REPLY_HEADER) + sizeof(PROC_INFO);
 	
 	RtlZeroMemory(&procInfo, sizeof(PPROC_INFO));
-	memcpy(&procInfo.ImageFileName, "TEST TEST TEST", 200);
-	
 	procInfo.Command = cmdGiveProcname;
+	procInfo.ImageFileName = 'x';
 
-	ULONG replyLength = sizeof(PPROC_INFO);
 	NTSTATUS status = FltSendMessage(gDrv.FilterHandle, (PFLT_PORT*)&gDrv.DllConnClientPort, &procInfo, sizeof(PROC_INFO),
 		&procInfo, &replyLength, NULL);
 		
 	if (!NT_SUCCESS(status))
 	{
-		LOG_ERROR("FltSendMessage failed with status 0x%x \n", status);
+		LOG_ERROR("\n\n*******8888*********8888888888***********FltSendMessage failed with status 0x%x \n\n\n", status);
 	}
 	else
 	{
-		LOG("LOG PROCESS INFO\n");
+		LOG("\n\nESTE OK MAI\n\n");
 	}
-
+	
 }
 
 void

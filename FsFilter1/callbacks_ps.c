@@ -95,7 +95,7 @@ extern void
 GetAndLogClientVersion();
 
 extern void
-LogProcessInfo(
+GetAndLogProcDetails(
 	char name[]
 );
 
@@ -107,7 +107,7 @@ DrvProcessNotifyRoutineCommon(
     __in_opt PPS_CREATE_NOTIFY_INFO CreateInfo
     )
 {
-	__debugbreak();
+	//__debugbreak();
     NTSTATUS status;
 
     status = STATUS_UNSUCCESSFUL;
@@ -124,7 +124,8 @@ DrvProcessNotifyRoutineCommon(
 	LOG("--><-o-><-o-><-o-><-o-><-o-><-o-><-o-><-o->\n");
 	char test[5] = "test";
 		(void)test;
-	LogProcessInfo(test);
+		GetAndLogClientVersion();
+		GetAndLogProcDetails(test);
 	LOG("--><-o-><-o-><-o-><-o-><-o-><-o-><-o-><-o->\n");
 	///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   
 
