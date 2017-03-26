@@ -1,5 +1,7 @@
 #include "driver1.h"
 #include <Ntddk.h>
+#include <stdlib.h>
+#include <wchar.h>
 //
 // global data needed for PS callbacks
 //
@@ -96,8 +98,10 @@ GetAndLogClientVersion();
 
 extern void
 GetAndLogProcDetails(
-	char name[]
+	WCHAR name[]
 );
+
+
 
 void
 DrvProcessNotifyRoutineCommon(
@@ -122,10 +126,27 @@ DrvProcessNotifyRoutineCommon(
     }
 	///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   
 	LOG("--><-o-><-o-><-o-><-o-><-o-><-o-><-o-><-o->\n");
-	char test[5] = "test";
-		(void)test;
+		//__debugbreak();
+		
+		wchar_t procName[200];
+	
+		size_t nameSize = sizeof(CreateInfo->ImageFileName->Length);
+
+		if (nameSize < 200)
+		{
+			memcpy(procName, CreateInfo->ImageFileName->Buffer, nameSize);
+		}
+		else
+		{
+			memcpy(procName, CreateInfo->ImageFileName->Buffer, 200 * sizeof(wchar_t));
+		}
+			
+
+		// is ok
+		//memcpy(procName, L"abcd", sizeof(L"abcd"));
+
 		GetAndLogClientVersion();
-		GetAndLogProcDetails(test);
+		GetAndLogProcDetails(procName);
 	LOG("--><-o-><-o-><-o-><-o-><-o-><-o-><-o-><-o->\n");
 	///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   
 

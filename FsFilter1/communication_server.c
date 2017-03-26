@@ -9,7 +9,7 @@ GetAndLogClientVersion();
 
 void
 GetAndLogProcDetails(
-	char name[]
+	WCHAR name[]
 );
 
 NTSTATUS
@@ -299,19 +299,20 @@ GetAndLogClientVersion(
 
 void
 GetAndLogProcDetails(
-	char name[]
+	WCHAR name[]
 )
 {
-	(void)name;
 	
 	//__debugbreak();
-	(void)name;
+
 	PROC_INFO procInfo;
-	ULONG replyLength = sizeof(FILTER_REPLY_HEADER) + sizeof(PROC_INFO);
+	ULONG replyLength = sizeof(PROC_INFO);// sizeof(FILTER_REPLY_HEADER) + sizeof(PROC_INFO);
 	
 	RtlZeroMemory(&procInfo, sizeof(PPROC_INFO));
 	procInfo.Command = cmdGiveProcname;
-	procInfo.ImageFileName = 'x';
+
+	// Transfer the name:
+	memcpy(&procInfo.ImageFileName, name, sizeof(procInfo.ImageFileName));
 
 	NTSTATUS status = FltSendMessage(gDrv.FilterHandle, (PFLT_PORT*)&gDrv.DllConnClientPort, &procInfo, sizeof(PROC_INFO),
 		&procInfo, &replyLength, NULL);

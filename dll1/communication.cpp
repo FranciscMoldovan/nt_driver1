@@ -169,21 +169,19 @@ UmCommunicationThreadBody(
 
 		case cmdGiveProcname:
 		{
-			__debugbreak();
+			//__debugbreak();
 			printf("\nABOUT TO ENTER THE ONLY BREAKPOINT!!!\n");
-
-
 			
 			PPROC_INFO procInfo = (PPROC_INFO)&pRequest->Command;
 			procInfo;
-			printf("NAAAME = %c", procInfo->ImageFileName);
+			printf("NAAAME = %ls", procInfo->ImageFileName);
 
 
 			PROCESS_INFORMATION_REPLY reply;
 			reply.ReplyHeader.MessageId = pRequest->MessageHeader.MessageId;
 			reply.ReplyHeader.Status = STATUS_SUCCESS;
 			reply.ProcessInformation.Command = cmdGiveProcname;
-			reply.ProcessInformation.ImageFileName = 'a';
+			//reply.ProcessInformation.ImageFileName = L"ok";
 			result = FilterReplyMessage(
 				gDllConnFilterPort,
 				&reply.ReplyHeader,
