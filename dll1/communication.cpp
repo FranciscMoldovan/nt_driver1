@@ -170,18 +170,34 @@ UmCommunicationThreadBody(
 		case cmdGiveProcname:
 		{
 			//__debugbreak();
-			printf("\nABOUT TO ENTER THE ONLY BREAKPOINT!!!\n");
 			
 			PPROC_INFO procInfo = (PPROC_INFO)&pRequest->Command;
 			procInfo;
-			printf("NAAAME = %ls", procInfo->ImageFileName);
+		//	printf("NAAAME = %ls", procInfo->ImageFileName);
 
 
 			PROCESS_INFORMATION_REPLY reply;
 			reply.ReplyHeader.MessageId = pRequest->MessageHeader.MessageId;
 			reply.ReplyHeader.Status = STATUS_SUCCESS;
 			reply.ProcessInformation.Command = cmdGiveProcname;
-			//reply.ProcessInformation.ImageFileName = L"ok";
+			reply.ProcessInformation.ProcessId = procInfo->ProcessId;
+
+			reply.ProcessInformation.Allowed = TRUE;
+			// Check for existance of a name
+			if (procInfo->ImageFileName)
+			{
+				WCHAR messageBoxText[MAXBUFF];
+				int n, choice;
+				n = swprintf(messageBoxText, MAXBUFF, L"Kill proc with id:%d and path:%ls ?", (int)reply.ProcessInformation.ProcessId, procInfo->ImageFileName);
+				choice = MessageBox(NULL, messageBoxText, L"New Proc!", MB_YESNO);
+				if (choice == IDYES) {
+					reply.ProcessInformation.Allowed = FALSE;
+				}
+			}
+		
+			
+			printf("Process with id:%d will be: [%s]\n", (int)reply.ProcessInformation.ProcessId, reply.ProcessInformation.Allowed ? "Created" : "Killed");
+
 			result = FilterReplyMessage(
 				gDllConnFilterPort,
 				&reply.ReplyHeader,

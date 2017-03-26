@@ -53,6 +53,7 @@ extern "C"
 		COMMAND_CODE		Command;
 		WCHAR				ImageFileName[MAXBUFF];
 		BOOLEAN				Allowed;
+		HANDLE				ProcessId;
 	}PROC_INFO, *PPROC_INFO;
 
 

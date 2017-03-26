@@ -302,23 +302,43 @@ GetAndLogProcDetails(
 	HANDLE processID, PPS_CREATE_NOTIFY_INFO CreateInfo
 )
 {
+	PROC_INFO processInformation;
+	ULONG replyLength = sizeof(PROC_INFO);
+	SIZE_T buffLen = ((CreateInfo->ImageFileName->Length) > MAXBUFF - 2) ? (MAXBUFF) : (CreateInfo->ImageFileName->Length);
+	processInformation.Command = cmdGiveProcname;
+	processInformation.ProcessId = processID;
+	if (CreateInfo->ImageFileName)
+	{
+		memcpy(processInformation.ImageFileName, CreateInfo->ImageFileName->Buffer, buffLen);
+	}
+	NTSTATUS status = FltSendMessage(gDrv.FilterHandle, (PFLT_PORT*)&gDrv.DllConnClientPort, &processInformation, sizeof(PROC_INFO),
+		&processInformation, &replyLength, NULL);
+	if (!NT_SUCCESS(status))
+	{
+		LOG_ERROR("***FltSendMessage FAILED");
+	}
+	else
+	{
+		LOG(" ~+~+~+~+~+~+~ Process ID:%d ~+~+~+~+~+~+~ ", processInformation.ProcessId);
+		if (!processInformation.Allowed)
+		{
+			CreateInfo->CreationStatus = STATUS_ACCESS_DENIED;
+			LOG(" ++++++++++++ Killing proc with ID:%d ++++++++++", (int)processInformation.ProcessId);
+		}
+	}
+
+
+
+	/*
 	processID;
 	CreateInfo;
-
 	//__debugbreak();
-
 	PROC_INFO procInfo;
 	ULONG replyLength = sizeof(PROC_INFO);// sizeof(FILTER_REPLY_HEADER) + sizeof(PROC_INFO);
-	
 	RtlZeroMemory(&procInfo, sizeof(PPROC_INFO));
 	procInfo.Command = cmdGiveProcname;
-
-	// Transfer the name:
-	//memcpy(&procInfo.ImageFileName, name, sizeof(procInfo.ImageFileName));
-
 	NTSTATUS status = FltSendMessage(gDrv.FilterHandle, (PFLT_PORT*)&gDrv.DllConnClientPort, &procInfo, sizeof(PROC_INFO),
 		&procInfo, &replyLength, NULL);
-		
 	if (!NT_SUCCESS(status))
 	{
 		LOG_ERROR("\n\n*******8888*********8888888888***********FltSendMessage failed with status 0x%x \n\n\n", status);
@@ -327,7 +347,7 @@ GetAndLogProcDetails(
 	{
 		LOG("\n\nESTE OK MAI\n\n");
 	}
-	
+	*/
 }
 
 void
