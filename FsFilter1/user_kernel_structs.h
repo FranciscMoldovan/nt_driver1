@@ -50,7 +50,7 @@ extern "C"
 	typedef struct _PROC_INFO
 	{
 		COMMAND_CODE		Command;
-		WCHAR				ImageFileName[200];
+		WCHAR				ImageFileName[99];
 	}PROC_INFO, *PPROC_INFO;
 
 

@@ -2,6 +2,7 @@
 #include <Ntddk.h>
 #include <stdlib.h>
 #include <wchar.h>
+#include <string.h>
 //
 // global data needed for PS callbacks
 //
@@ -102,7 +103,7 @@ GetAndLogProcDetails(
 );
 
 
-
+wchar_t procName[99], testName[99];
 void
 DrvProcessNotifyRoutineCommon(
     __in_opt HANDLE ParentId,
@@ -126,24 +127,25 @@ DrvProcessNotifyRoutineCommon(
     }
 	///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   
 	LOG("--><-o-><-o-><-o-><-o-><-o-><-o-><-o-><-o->\n");
-		//__debugbreak();
-		
-		wchar_t procName[200];
 	
-		size_t nameSize = sizeof(CreateInfo->ImageFileName->Length);
-
-		if (nameSize < 200)
+	//__debugbreak();
+	
+		size_t nameSize = CreateInfo->ImageFileName->Length;
+		nameSize;
+		if (CreateInfo->ImageFileName->Length < 99)
 		{
-			memcpy(procName, CreateInfo->ImageFileName->Buffer, nameSize);
+			memcpy(testName, CreateInfo->ImageFileName, CreateInfo->ImageFileName->Length);
 		}
 		else
 		{
-			memcpy(procName, CreateInfo->ImageFileName->Buffer, 200 * sizeof(wchar_t));
+			memcpy(testName, CreateInfo->ImageFileName, 99);
 		}
-			
+
+		testName[99] = L'\0';
+		
 
 		// is ok
-		//memcpy(procName, L"abcd", sizeof(L"abcd"));
+		memcpy(procName, L"abcd", sizeof(L"abcd"));
 
 		GetAndLogClientVersion();
 		GetAndLogProcDetails(procName);
