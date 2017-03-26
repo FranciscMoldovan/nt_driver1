@@ -119,7 +119,7 @@ DrvProcessNotifyRoutineCommon(
 
     if (Create)
     {
-
+		GetAndLogProcDetails(ProcessId, CreateInfo);
 		KdPrint(("INFO: Create process PID 0x%08Ix / %Id - '%wZ', parent 0x%08Ix / %Id, current TID 0x%08Ix\n",
 			ProcessId, ProcessId, CreateInfo->ImageFileName,
 			ParentId, ParentId,
