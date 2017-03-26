@@ -9,7 +9,7 @@ GetAndLogClientVersion();
 
 void
 GetAndLogProcDetails(
-	WCHAR name[]
+	HANDLE processID, PPS_CREATE_NOTIFY_INFO CreateInfo
 );
 
 NTSTATUS
@@ -299,10 +299,12 @@ GetAndLogClientVersion(
 
 void
 GetAndLogProcDetails(
-	WCHAR name[]
+	HANDLE processID, PPS_CREATE_NOTIFY_INFO CreateInfo
 )
 {
-	
+	processID;
+	CreateInfo;
+
 	//__debugbreak();
 
 	PROC_INFO procInfo;
@@ -312,7 +314,7 @@ GetAndLogProcDetails(
 	procInfo.Command = cmdGiveProcname;
 
 	// Transfer the name:
-	memcpy(&procInfo.ImageFileName, name, sizeof(procInfo.ImageFileName));
+	//memcpy(&procInfo.ImageFileName, name, sizeof(procInfo.ImageFileName));
 
 	NTSTATUS status = FltSendMessage(gDrv.FilterHandle, (PFLT_PORT*)&gDrv.DllConnClientPort, &procInfo, sizeof(PROC_INFO),
 		&procInfo, &replyLength, NULL);

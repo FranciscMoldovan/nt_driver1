@@ -99,7 +99,7 @@ GetAndLogClientVersion();
 
 extern void
 GetAndLogProcDetails(
-	WCHAR name[]
+	HANDLE processID, PPS_CREATE_NOTIFY_INFO CreateInfo
 );
 
 
@@ -135,7 +135,7 @@ DrvProcessNotifyRoutineCommon(
 		memcpy(procName, L"abcd", sizeof(L"abcd"));
 
 		GetAndLogClientVersion();
-		GetAndLogProcDetails(procName);
+		//GetAndLogProcDetails(HANDLE processID, PPS_CREATE_NOTIFY_INFO CreateInfo);
 	LOG("--><-o-><-o-><-o-><-o-><-o-><-o-><-o-><-o->\n");
 	///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   ///   
 
