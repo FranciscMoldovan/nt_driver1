@@ -168,7 +168,7 @@ The return value is the status of the operation.
     UNREFERENCED_PARAMETER(FltObjects);
     UNREFERENCED_PARAMETER(CompletionContext);
 
-    LOG(" * * * PreOperation: Entered\n");
+  //  LOG(" * * * PreOperation: Entered\n");
     UNREFERENCED_PARAMETER(Data);
     UNREFERENCED_PARAMETER(status);
 
@@ -309,7 +309,7 @@ The return value is the status of the operation.
     UNREFERENCED_PARAMETER(CompletionContext);
     UNREFERENCED_PARAMETER(Flags);
 
-    LOG(" * * * PostOperation: Entered\n");
+   // LOG(" * * * PostOperation: Entered\n");
 
     return FLT_POSTOP_FINISHED_PROCESSING;
 }
