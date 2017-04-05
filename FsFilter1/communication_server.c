@@ -123,7 +123,6 @@ ClientConnectedCallback(
 
     gDrv.DllConnClientPort = ClientPort;
 
-	
     return STATUS_SUCCESS;
 }
 

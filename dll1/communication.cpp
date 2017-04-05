@@ -141,7 +141,7 @@ UmCommunicationThreadBody(
 
         switch (pRequest->Command)
         {
-			
+
         case cmdGetLibraryVersion:
         {
 			//__debugbreak();

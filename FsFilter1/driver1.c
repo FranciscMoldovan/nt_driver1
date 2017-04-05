@@ -29,13 +29,13 @@ DriverUnload(
 
 CONST FLT_OPERATION_REGISTRATION Callbacks[] = {
 
-#if 0
+
 // TODO - List all of the requests to filter.
 	{ IRP_MJ_CREATE,
     0,
     PreOperation,
     PostOperation },
-
+#if 0
     { IRP_MJ_CREATE_NAMED_PIPE,
     0,
     PreOperation,
@@ -284,10 +284,23 @@ void ProcessNotifyRoutine(
 }
 
 
+// KEYS
+LARGE_INTEGER g_CmCookie = { 0 };
+
+NTSTATUS RfRegistryCallback(
+	_In_ PVOID CallbackContext,
+	_In_ PVOID Argument1,
+	_In_ PVOID Argument2
+);
+
+void RfUnload(
+	_In_ PDRIVER_OBJECT pDriverObject
+);
+// KEYS
+
 /*************************************************************************
 MiniFilter initialization and unload routines.
 *************************************************************************/
-
 
 NTSTATUS
 DriverEntry(
@@ -327,6 +340,19 @@ Routine can return non success error codes.
     status = FltRegisterFilter(DriverObject,
         &FilterRegistration,
         &gDrv.FilterHandle);
+
+
+	// Set up the unload routine
+	DriverObject->DriverUnload = RfUnload;
+
+	// Register our callback with the system
+	UNICODE_STRING AltitudeString = RTL_CONSTANT_STRING(L"360000");
+
+	status = CmRegisterCallbackEx(RfRegistryCallback, &AltitudeString, DriverObject, NULL, &g_CmCookie, NULL);
+	if (!NT_SUCCESS(status))
+	{
+		LOG("FAILED TO REGISTER KEYS FILTER\n");
+	}
 
     FLT_ASSERT(NT_SUCCESS(status));
 
@@ -368,3 +394,52 @@ DriverUnload(
     return STATUS_SUCCESS;
 }
 
+// KEYS
+void RfUnload(_In_ PDRIVER_OBJECT pDriverObject)
+{
+	UNREFERENCED_PARAMETER(pDriverObject);
+	PAGED_CODE();
+	NTSTATUS status = CmUnRegisterCallback(g_CmCookie);
+	if (!NT_SUCCESS(status))
+	{
+		// Failed to unregister
+	}
+}
+
+NTSTATUS RfRegistryCallback(
+	_In_ PVOID CallbackContext,
+	_In_ PVOID Argument1,
+	_In_ PVOID Argument2
+)
+{
+	PREG_DELETE_VALUE_KEY_INFORMATION PreDeleteValueInfo;
+
+	UNREFERENCED_PARAMETER(CallbackContext);
+	UNREFERENCED_PARAMETER(Argument2);
+	REG_NOTIFY_CLASS Operation = (REG_NOTIFY_CLASS)(ULONG_PTR)Argument1;
+
+	// KEYS
+	LARGE_INTEGER localCookie = { 0 };
+
+	PUNICODE_STRING objectName;
+
+	switch (Operation)
+	{
+	case RegNtPreCreateKeyEx:
+		break;
+	case RegNtPreOpenKeyEx:
+		break;
+	case RegNtKeyHandleClose:
+		break;
+	case RegNtPreDeleteValueKey:
+		PreDeleteValueInfo = (PREG_DELETE_VALUE_KEY_INFORMATION)Argument2;
+		PreDeleteValueInfo;
+		NTSTATUS status = CmCallbackGetKeyObjectID(&localCookie, PreDeleteValueInfo->Object, NULL, &objectName);
+		status;
+		LOG("********** => %ls\n",objectName->Buffer);
+	default:
+		break;
+	}
+	return STATUS_SUCCESS;
+}
+// KEYS

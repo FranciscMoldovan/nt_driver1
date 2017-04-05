@@ -1,15 +1,15 @@
 ﻿  Building 'FsFilter1' with toolset 'WindowsKernelModeDriver10.0' and the 'Desktop' target platform.
-  Stamping C:\_sisc\dsmk\DriverFlt\IntDir\FsFilter1\Win32\Debug\driver1.inf [Version] section with DriverVer=03/24/2017,22.43.32.211
+  Stamping C:\_sisc\dsmk\DriverFlt2017\DriverFlt\IntDir\FsFilter1\Win32\Debug\driver1.inf [Version] section with DriverVer=04/05/2017,20.54.59.188
   minifilter_callbacks.c
   callbacks_ps.c
   communication_server.c
   debug.c
   driver1.c
   Generating Code...
-  FsFilter1.vcxproj -> C:\_sisc\dsmk\DriverFlt\bin\Win32\Debug\driver1.sys
-  FsFilter1.vcxproj -> C:\_sisc\dsmk\DriverFlt\bin\Win32\Debug\driver1.pdb (Full PDB)
+  FsFilter1.vcxproj -> C:\_sisc\dsmk\DriverFlt2017\DriverFlt\bin\Win32\Debug\driver1.sys
+  FsFilter1.vcxproj -> C:\_sisc\dsmk\DriverFlt2017\DriverFlt\bin\Win32\Debug\driver1.pdb (Full PDB)
   Done Adding Additional Store
-  Successfully signed: C:\_sisc\dsmk\DriverFlt\bin\Win32\Debug\driver1.sys
+  Successfully signed: C:\_sisc\dsmk\DriverFlt2017\DriverFlt\bin\Win32\Debug\driver1.sys
   
   ........................
   Signability test complete.
@@ -21,20 +21,20 @@
   None
   
   Catalog generation complete.
-  C:\_sisc\dsmk\DriverFlt\bin\Win32\Debug\FsFilter1\driver1.cat
+  C:\_sisc\dsmk\DriverFlt2017\DriverFlt\bin\Win32\Debug\FsFilter1\driver1.cat
   Done Adding Additional Store
-  Successfully signed: C:\_sisc\dsmk\DriverFlt\bin\Win32\Debug\FsFilter1\driver1.cat
+  Successfully signed: C:\_sisc\dsmk\DriverFlt2017\DriverFlt\bin\Win32\Debug\FsFilter1\driver1.cat
   
-  "source file mask to copy: ["C:\_sisc\dsmk\DriverFlt\bin\Win32\Debug\driver*"]"
+  "source file mask to copy: ["C:\_sisc\dsmk\DriverFlt2017\DriverFlt\bin\Win32\Debug\driver*"]"
   "destination folder: [c:\_share_vm\]"
   "symbols will be saved to location: [c:\_symbols]"
-  C:\_sisc\dsmk\DriverFlt\bin\Win32\Debug\driver1.cer
-  C:\_sisc\dsmk\DriverFlt\bin\Win32\Debug\driver1.inf
-  C:\_sisc\dsmk\DriverFlt\bin\Win32\Debug\driver1.pdb
-  C:\_sisc\dsmk\DriverFlt\bin\Win32\Debug\driver1.sys
+  C:\_sisc\dsmk\DriverFlt2017\DriverFlt\bin\Win32\Debug\driver1.cer
+  C:\_sisc\dsmk\DriverFlt2017\DriverFlt\bin\Win32\Debug\driver1.inf
+  C:\_sisc\dsmk\DriverFlt2017\DriverFlt\bin\Win32\Debug\driver1.pdb
+  C:\_sisc\dsmk\DriverFlt2017\DriverFlt\bin\Win32\Debug\driver1.sys
   4 File(s) copied
-  Finding ID...  0000000068
+  Finding ID...  0000000001
   
-  SYMSTORE: Number of files stored = 1
-  SYMSTORE: Number of errors = 1
+  SYMSTORE: Number of files stored = 2
+  SYMSTORE: Number of errors = 0
   SYMSTORE: Number of files ignored = 2

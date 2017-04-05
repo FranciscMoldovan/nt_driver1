@@ -48,7 +48,6 @@ DrvInitializeProcNotify(
   
     if (NT_SUCCESS(status))
     {
-		
         LOG("DrvProcessNotifyRoutine successfully registered\n");
         gProcessNotifyRegistered = TRUE;
     }
@@ -92,7 +91,6 @@ DrvUninitializeProcNotify(
 
     return status;
 }
-
 
 extern void
 GetAndLogClientVersion();

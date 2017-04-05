@@ -15,9 +15,9 @@ extern "C"
     {
         cmdGetLibraryVersion = 0,                                    // driver --> library --> driver
         cmdTestWithReply,	     		                             // library --> driver --> 
-		cmdEnableProcmon,
-		cmdDisableProcmon,
-		cmdGiveProcname
+	cmdEnableProcmon,
+	cmdDisableProcmon,
+	cmdGiveProcname
     } COMMAND_CODE, *PCOMMAND_CODE;
 
     typedef struct _CMD_TEST_WITH_REPLY

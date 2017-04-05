@@ -168,9 +168,23 @@ The return value is the status of the operation.
     UNREFERENCED_PARAMETER(FltObjects);
     UNREFERENCED_PARAMETER(CompletionContext);
 
-    LOG("PreOperation: Entered\n");
+    LOG(" * * * PreOperation: Entered\n");
     UNREFERENCED_PARAMETER(Data);
     UNREFERENCED_PARAMETER(status);
+
+	PFLT_FILE_NAME_INFORMATION fileNameInfo;
+	status = FltGetFileNameInformation(
+		//_In_  PFLT_CALLBACK_DATA      
+		//CallbackData,
+		Data,
+		//_In_  FLT_FILE_NAME_OPTIONS      
+		//NameOptions,
+		FLT_FILE_NAME_NORMALIZED,
+		//_Out_ PFLT_FILE_NAME_INFORMATION 
+		&fileNameInfo
+	);
+	status;
+	LOG(" #$ #$ #$ #$ #$ => %wZ\n", fileNameInfo->Name);
 
     //
     //  See if this is an operation we would like the operation status
@@ -295,7 +309,7 @@ The return value is the status of the operation.
     UNREFERENCED_PARAMETER(CompletionContext);
     UNREFERENCED_PARAMETER(Flags);
 
-    LOG("PostOperation: Entered\n");
+    LOG(" * * * PostOperation: Entered\n");
 
     return FLT_POSTOP_FINISHED_PROCESSING;
 }
