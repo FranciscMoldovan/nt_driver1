@@ -9,7 +9,8 @@
 
 #include "user_kernel_structs.h"
 #include "dll1_public.h"
-
+#include <iostream>
+#include <string>
 using namespace std;
 
 static HANDLE gDllConnLock = NULL;
@@ -139,6 +140,10 @@ UmCommunicationThreadBody(
         }
         PCOMMAND_REQUEST pRequest = (PCOMMAND_REQUEST)&ThreadContext->MessageBuffer;
 
+		//__debugbreak();
+
+		printf(" SWITCH CASE: #%d", (int)pRequest->Command);
+
         switch (pRequest->Command)
         {
 
@@ -211,6 +216,8 @@ UmCommunicationThreadBody(
 			}
 		}break;
 			
+
+
 		// TODO
 		case cmdEnableProcmon:
 		{
@@ -227,7 +234,43 @@ UmCommunicationThreadBody(
 			printf("Kill Kill Kill CMD disable PROCMON");
 		}break;
 
-		
+		case cmdSendTextBuff:
+		{
+			SCANNER_REPLY reply;
+			BOOLEAN permission = TRUE;
+			PTEXTBUFF_INFO TextBuffInfo = (PTEXTBUFF_INFO)&pRequest->Command;
+			TextBuffInfo->Contents;
+
+			std::string buff_collected(reinterpret_cast<const char*>(TextBuffInfo->BytesToScan, TextBuffInfo->Contents));
+			buff_collected.resize(TextBuffInfo->BytesToScan);
+			std::cout << "***** => " << std::endl << buff_collected << std::endl;
+
+			if (buff_collected.find("petrica") != std::string::npos) {
+				permission = FALSE;
+				std::cout << "FORBIDDEN WORD DETECTED! \n";
+			}
+
+			reply.ReplyHeader.MessageId = pRequest->MessageHeader.MessageId;
+			reply.ReplyHeader.Status = STATUS_SUCCESS;
+			reply.Textbuffinfo.Allowed = permission;
+			reply.Textbuffinfo.Command = cmdSendTextBuff;
+
+			if (permission == TRUE)
+				std::cout << "REPLYING WITH RESULT: TRUE\n" << std::endl;
+			else
+				std::cout << "REPLYING WITH RESULT: FALSE\n" << std::endl;
+			//__debugbreak();
+			result = FilterReplyMessage(
+				gDllConnFilterPort,
+				&reply.ReplyHeader,
+				sizeof(FILTER_REPLY_HEADER) + sizeof(TEXTBUFF_INFO));
+			if (S_OK != result)
+			{
+				LogPrint("ERROR: invalid result code for FilterReplyMessage 0x%08x \n",
+					result);
+			}
+
+		}break;
 
         default:
             LogPrint("ERROR: unrecognized message in dllconn thread (command code %d) \n", pRequest->Command);

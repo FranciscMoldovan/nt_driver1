@@ -57,7 +57,7 @@ InitializeCommunication()
     RtlInitUnicodeString(&uniStr, DRIVER_PORT);
 
     // we secure the port so only ADMINs & SYSTEM can access it
-	LOG("ABOUT TO CALL:::: FltBuildDefaultSecurityDescriptor");
+	LOG("ABOUT TO CALL:::: FltBuildDefaultSecurityDescriptor\n");
     status = FltBuildDefaultSecurityDescriptor(&secDesc, FLT_PORT_ALL_ACCESS);
     if (!NT_SUCCESS(status))
     {
@@ -73,7 +73,7 @@ InitializeCommunication()
         NULL,
         secDesc);
 
-	LOG("ABOUT TO CALL:::: FltCreateCommunicationPort");
+	LOG("ABOUT TO CALL:::: FltCreateCommunicationPort\n");
 	//__debugbreak();
     status = FltCreateCommunicationPort(
         gDrv.FilterHandle,
@@ -98,7 +98,7 @@ cleanup:
     if (NULL != secDesc)
     {
         // free the security descriptor in all cases; it is not needed once the call to FltCreateCommunicationPort() is made
-		LOG("ABOUT TO CALL:::: FltFreeSecurityDescriptor");
+		LOG("ABOUT TO CALL:::: FltFreeSecurityDescriptor\n");
 		FltFreeSecurityDescriptor(secDesc);
         secDesc = NULL;
     }
@@ -135,7 +135,7 @@ ClientDisconnectCallback(
 
     UNREFERENCED_PARAMETER(ConnectionCookie);
 
-	LOG("ABOUT TO CALL:::: FltCloseClientPort");
+	LOG("ABOUT TO CALL:::: FltCloseClientPort\n");
     FltCloseClientPort(gDrv.FilterHandle, (PFLT_PORT*)&gDrv.DllConnClientPort);
     gDrv.DllConnClientPort = NULL;
 }
@@ -282,7 +282,7 @@ GetAndLogClientVersion(
     RtlZeroMemory(&clientVersionInformation, sizeof(VERSION_INFORMATION));
     clientVersionInformation.Command = cmdGetLibraryVersion;
 
-	LOG("ABOUT TO CALL:::: FltSendMessage");
+	LOG("ABOUT TO CALL:::: FltSendMessage\n");
     NTSTATUS status = FltSendMessage(gDrv.FilterHandle, (PFLT_PORT*)&gDrv.DllConnClientPort, &clientVersionInformation, sizeof(VERSION_INFORMATION),
         &clientVersionInformation, &replyLength, NULL);
     if (!NT_SUCCESS(status))
@@ -354,7 +354,7 @@ UninitializeCommunication()
 {
     if (NULL != gDrv.DllConnServerPort)
     {
-		LOG("ABOUT TO CALL:::: FltCloseCommunicationPort");
+		LOG("ABOUT TO CALL:::: FltCloseCommunicationPort\n");
         FltCloseCommunicationPort(gDrv.DllConnServerPort);
         gDrv.DllConnServerPort = NULL;
     }
@@ -362,7 +362,7 @@ UninitializeCommunication()
     PFLT_PORT clientPort = (PFLT_PORT)InterlockedExchangePointer((volatile PVOID*)&gDrv.DllConnClientPort, NULL);
     if (NULL != clientPort)
     {
-		LOG("ABOUT TO CALL:::: FltCloseClientPort");
+		LOG("ABOUT TO CALL:::: FltCloseClientPort\n");
         FltCloseClientPort(gDrv.FilterHandle, &clientPort);
     }
 }

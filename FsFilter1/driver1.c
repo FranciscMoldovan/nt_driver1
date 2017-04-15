@@ -4,7 +4,7 @@
 
 #pragma prefast(disable:__WARNING_ENCODE_MEMBER_FUNCTION_POINTER, "Not valid for kernel mode drivers")
 
-
+extern DRV_GLOBAL_DATA gDrv;
 
 NTSTATUS
 DriverEntry(

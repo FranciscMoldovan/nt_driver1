@@ -17,7 +17,8 @@ extern "C"
         cmdTestWithReply,	     		                             // library --> driver --> 
 	cmdEnableProcmon,
 	cmdDisableProcmon,
-	cmdGiveProcname
+	cmdGiveProcname, 
+	cmdSendTextBuff
     } COMMAND_CODE, *PCOMMAND_CODE;
 
     typedef struct _CMD_TEST_WITH_REPLY
@@ -69,6 +70,20 @@ extern "C"
 		FILTER_REPLY_HEADER		ReplyHeader;
 		PROC_INFO				ProcInfo;
 	}PROCESS_INFORMATION_REPLY, *PPROCESS_INFORMATION_REPLY;
+
+#define SCANNER_READ_BUFFER_SIZE   1024
+	typedef struct _SCANNER_NOTIFICATION {
+		COMMAND_CODE	Command;
+		ULONG			BytesToScan;
+		ULONG			Reserved;             // for quad-word alignement of the Contents structure
+		UCHAR			Contents[SCANNER_READ_BUFFER_SIZE];
+		BOOLEAN			Allowed;
+	} TEXTBUFF_INFO, *PTEXTBUFF_INFO;
+
+	typedef struct _SCANNER_REPLY {
+		FILTER_REPLY_HEADER		ReplyHeader;
+		TEXTBUFF_INFO			Textbuffinfo;
+	} SCANNER_REPLY, *PSCANNER_REPLY;
 
 #ifdef __cplusplus
 }

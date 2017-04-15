@@ -1,9 +1,18 @@
 #include "driver1.h"
 #include "minifilter_callbacks.h"
+#include "user_kernel_structs.h"
 
 
 ULONG_PTR OperationStatusCtx = 1;
 
+extern DRV_GLOBAL_DATA gDrv;
+
+NTSTATUS
+ScannerpScanFileInUserMode(
+	_In_ PFLT_INSTANCE Instance,
+	_In_ PFILE_OBJECT FileObject,
+	_Out_ PBOOLEAN SafeToOpen
+);
 
 NTSTATUS
 InstanceSetup(
@@ -163,7 +172,13 @@ The return value is the status of the operation.
 
 --*/
 {
-    NTSTATUS status;
+	//  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //
+//	FLT_PREOP_CALLBACK_STATUS returnStatus = FLT_PREOP_SUCCESS_NO_CALLBACK;
+	NTSTATUS status;
+//	ULONG replyLength;
+//	BOOLEAN safe = TRUE;
+//	PUCHAR buffer;
+	//  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  
 
     UNREFERENCED_PARAMETER(FltObjects);
     UNREFERENCED_PARAMETER(CompletionContext);
@@ -172,28 +187,26 @@ The return value is the status of the operation.
     UNREFERENCED_PARAMETER(Data);
     UNREFERENCED_PARAMETER(status);
 
+
 	PFLT_FILE_NAME_INFORMATION fileNameInfo;
 	status = FltGetFileNameInformation(
-		//_In_  PFLT_CALLBACK_DATA      
-		//CallbackData,
 		Data,
-		//_In_  FLT_FILE_NAME_OPTIONS      
-		//NameOptions,
-		FLT_FILE_NAME_NORMALIZED,
-		//_Out_ PFLT_FILE_NAME_INFORMATION 
+		FLT_FILE_NAME_OPENED |
+		FLT_FILE_NAME_QUERY_FILESYSTEM_ONLY,
 		&fileNameInfo
 	);
-	status;
-	LOG(" #$ #$ #$ #$ #$ => %wZ\n", fileNameInfo->Name);
+	
 
-    //
-    //  See if this is an operation we would like the operation status
-    //  for.  If so request it.
-    //
-    //  NOTE: most filters do NOT need to do this.  You only need to make
-    //        this call if, for example, you need to know if the oplock was
-    //        actually granted.
-    //
+	
+	PWCH* p_str = &fileNameInfo->Name.Buffer;
+	if (wcswcs(*p_str, L".txt") != NULL) 
+	{
+		//LOG("T X T file I'm working with %ls \n", *p_str);
+		//__debugbreak();
+	
+	}
+	p_str;
+
 
     if (DoRequestOperationStatus(Data)) {
 
@@ -272,10 +285,10 @@ The return value is the status of the operation.
 
 FLT_POSTOP_CALLBACK_STATUS
 PostOperation(
-    _Inout_ PFLT_CALLBACK_DATA Data,
-    _In_ PCFLT_RELATED_OBJECTS FltObjects,
-    _In_opt_ PVOID CompletionContext,
-    _In_ FLT_POST_OPERATION_FLAGS Flags
+	_Inout_ PFLT_CALLBACK_DATA Data,
+	_In_ PCFLT_RELATED_OBJECTS FltObjects,
+	_In_opt_ PVOID CompletionContext,
+	_In_ FLT_POST_OPERATION_FLAGS Flags
 )
 /*++
 
@@ -304,14 +317,60 @@ The return value is the status of the operation.
 
 --*/
 {
-    UNREFERENCED_PARAMETER(Data);
-    UNREFERENCED_PARAMETER(FltObjects);
-    UNREFERENCED_PARAMETER(CompletionContext);
-    UNREFERENCED_PARAMETER(Flags);
+	UNREFERENCED_PARAMETER(Data);
+	UNREFERENCED_PARAMETER(FltObjects);
+	UNREFERENCED_PARAMETER(CompletionContext);
+	UNREFERENCED_PARAMETER(Flags);
 
-   // LOG(" * * * PostOperation: Entered\n");
+	NTSTATUS status;
+	BOOLEAN safeToOpen = TRUE;
 
-    return FLT_POSTOP_FINISHED_PROCESSING;
+	// If this create was failinf anyway, avoid scaning now
+	if (!NT_SUCCESS(Data->IoStatus.Status) ||
+		(STATUS_REPARSE == Data->IoStatus.Status))
+	{
+		return FLT_POSTOP_FINISHED_PROCESSING;
+	}
+
+	// Check if it has the .txt extension
+	PFLT_FILE_NAME_INFORMATION fileNameInfo;
+	status = FltGetFileNameInformation(
+		Data,
+		FLT_FILE_NAME_OPENED |
+		FLT_FILE_NAME_QUERY_FILESYSTEM_ONLY,
+		&fileNameInfo
+	);
+
+	PWCH* p_str = &fileNameInfo->Name.Buffer;
+	if (wcswcs(*p_str, L".txt") != NULL)
+	{
+		LOG("T X T file I'm working with %ls \n", *p_str);
+		//__debugbreak();
+		(VOID)ScannerpScanFileInUserMode(FltObjects->Instance,
+			FltObjects->FileObject,
+			&safeToOpen);
+
+
+		LOG("GOT ANSWER: %d\n", safeToOpen);
+
+		if (!safeToOpen)
+		{
+			LOG("##*#*#*#*# NOT SAFE TO OPEN\n");
+			// Ask filter manager to undo the create
+			FltCancelFileOpen(FltObjects->Instance, FltObjects->FileObject);
+			Data->IoStatus.Status = STATUS_ACCESS_DENIED;
+			Data->IoStatus.Information = 0;
+
+			status = FLT_POSTOP_FINISHED_PROCESSING;
+		}
+
+	}
+	p_str;
+    
+	// Release the file name info, as it is no longer needed
+	FltReleaseFileNameInformation(fileNameInfo);
+
+	return FLT_POSTOP_FINISHED_PROCESSING;
 }
 
 
@@ -405,4 +464,151 @@ FALSE - If we don't
             ((iopb->MajorFunction == IRP_MJ_DIRECTORY_CONTROL) &&
             (iopb->MinorFunction == IRP_MN_NOTIFY_CHANGE_DIRECTORY))
             );
+}
+
+NTSTATUS
+ScannerpScanFileInUserMode(
+	_In_ PFLT_INSTANCE Instance,
+	_In_ PFILE_OBJECT FileObject,
+	_Out_ PBOOLEAN SafeToOpen
+)
+// Rountine sends a req to user mode to scan a given file and
+// give a reply wether the contents is safe to open
+// Should this scan fail, SafeToOpen is set to TRUE. Failure at scan
+// may appear because the service hasn't started, or because tis create/
+// cleanup is for a directory, and there os no data to read and scan
+/*
+Arguments:
+
+Instance - Handle to the filter instance for the scanner on this volume.
+
+FileObject - File to be scanned.
+
+SafeToOpen - Set to FALSE if the file is scanned successfully and it contains
+foul language.
+
+Return Value :
+
+The status of the operation, hopefully STATUS_SUCCESS.The common failure
+status will probably be STATUS_INSUFFICIENT_RESOURCES.
+*/
+{
+	NTSTATUS status = STATUS_SUCCESS;
+//	PVOID buffer = NULL;
+//	ULONG bytesRead;
+	Instance; FileObject; SafeToOpen;
+	*SafeToOpen = TRUE;
+	PFLT_VOLUME volume = NULL;
+	FLT_VOLUME_PROPERTIES volumeProps;
+	ULONG replyLength, length, bytesRead;
+	PVOID buffer = NULL;
+	TEXTBUFF_INFO notification;
+	LARGE_INTEGER offset;
+	// Check for client port
+//	if (gDrv.DllConnClientPort == NULL)
+//	{
+//		return STATUS_SUCCESS;
+//	}
+	replyLength;
+
+	try
+	{
+		// Obtain the colume object
+		status = FltGetVolumeFromInstance(Instance, &volume);
+		if (!NT_SUCCESS(status))
+		{
+			leave;
+		}
+		
+		// Get sector size. Noncached I/O can only be done at sector size offsets, and in lengths which are
+		// multiples of sector size. A more efficient ways is making this call once and remeber the sector
+		// size in the instance setup routine and setup an instance context where we can cache it
+
+		status = FltGetVolumeProperties(volume,
+										&volumeProps,
+										sizeof(volumeProps),
+										&length);
+		// STATUS_BUFFER_OVERFLOW can be returned - however we only need the properties, not the names
+		// hence we only check for error status
+		if (NT_ERROR(status))
+		{
+			leave;
+		}
+
+		length = max(SCANNER_READ_BUFFER_SIZE, volumeProps.SectorSize);
+
+		// Use non-buffered I/O, so allocate aligned pool
+		buffer = FltAllocatePoolAlignedWithTag(Instance,
+											   NonPagedPool,
+											   length,
+											   'nacS');
+		if (NULL == buffer)
+		{
+			status = STATUS_INSUFFICIENT_RESOURCES; 
+			leave;
+		}
+
+	//	notification = ExAllocatePoolWithTag(NonPagedPool,
+	//											 sizeof(TEXTBUFF_INFO),
+	//											 'nacS');
+	//	if (NULL == notification)
+	//	{
+	//		status = STATUS_INSUFFICIENT_RESOURCES;
+	//		leave;
+	//	}
+
+		// Read the beginning of the file and pass the contents to user mode
+		offset.QuadPart = bytesRead = 0;
+		//__debugbreak();
+		status = FltReadFile(Instance,
+				 FileObject,
+				 &offset,
+				 length,
+				 buffer,
+				 FLTFL_IO_OPERATION_NON_CACHED |
+				 FLTFL_IO_OPERATION_DO_NOT_UPDATE_BYTE_OFFSET,
+				 &bytesRead,
+				 NULL,
+				 NULL);
+							  
+		// LOG(" > > > FILE CONTENTS: %s\n", buffer);
+		
+		if(NT_SUCCESS(status) && (0 != bytesRead))
+		{
+			notification.BytesToScan = (ULONG)bytesRead;
+			notification.Command = cmdSendTextBuff;
+			notification.Allowed = *SafeToOpen;
+			// Copy only as much as the buffer cand hold
+			RtlCopyMemory(&notification.Contents,
+				buffer,
+				min(notification.BytesToScan, SCANNER_READ_BUFFER_SIZE));
+
+			replyLength = sizeof(TEXTBUFF_INFO);
+
+			status = FltSendMessage(gDrv.FilterHandle,
+									(PFLT_PORT*)&gDrv.DllConnClientPort,
+									&notification,
+									sizeof(TEXTBUFF_INFO),
+									&notification,
+	     							&replyLength,
+									NULL);
+
+			if (STATUS_SUCCESS == status)
+			{
+				if (notification.Allowed == TRUE)
+					LOG("+++++++++++++++++++++++++FILTER RECEIVED TRUE\n");
+				else if (notification.Allowed == FALSE)
+					LOG("-------------------------FILTER RECEIVED TRUE\n");
+				*SafeToOpen = notification.Allowed;
+			}
+			else
+			{
+				LOG_ERROR("FltSendMessage failed with status 0x%x \n", status);
+			}
+		}
+	}
+	finally{
+
+	}
+	return status;
 }
