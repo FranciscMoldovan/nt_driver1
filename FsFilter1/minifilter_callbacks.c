@@ -173,12 +173,7 @@ The return value is the status of the operation.
 --*/
 {
 	//  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //
-//	FLT_PREOP_CALLBACK_STATUS returnStatus = FLT_PREOP_SUCCESS_NO_CALLBACK;
 	NTSTATUS status;
-//	ULONG replyLength;
-//	BOOLEAN safe = TRUE;
-//	PUCHAR buffer;
-	//  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  
 
     UNREFERENCED_PARAMETER(FltObjects);
     UNREFERENCED_PARAMETER(CompletionContext);
@@ -186,27 +181,6 @@ The return value is the status of the operation.
   //  LOG(" * * * PreOperation: Entered\n");
     UNREFERENCED_PARAMETER(Data);
     UNREFERENCED_PARAMETER(status);
-
-
-	PFLT_FILE_NAME_INFORMATION fileNameInfo;
-	status = FltGetFileNameInformation(
-		Data,
-		FLT_FILE_NAME_OPENED |
-		FLT_FILE_NAME_QUERY_FILESYSTEM_ONLY,
-		&fileNameInfo
-	);
-	
-
-	
-	PWCH* p_str = &fileNameInfo->Name.Buffer;
-	if (wcswcs(*p_str, L".txt") != NULL) 
-	{
-		//LOG("T X T file I'm working with %ls \n", *p_str);
-		//__debugbreak();
-	
-	}
-	p_str;
-
 
     if (DoRequestOperationStatus(Data)) {
 
@@ -323,9 +297,8 @@ The return value is the status of the operation.
 	UNREFERENCED_PARAMETER(Flags);
 
 	NTSTATUS status;
-	BOOLEAN safeToOpen = TRUE;
 
-	// If this create was failinf anyway, avoid scaning now
+	// If this create was failing anyway, avoid scaning now
 	if (!NT_SUCCESS(Data->IoStatus.Status) ||
 		(STATUS_REPARSE == Data->IoStatus.Status))
 	{
@@ -345,24 +318,7 @@ The return value is the status of the operation.
 	if (wcswcs(*p_str, L".txt") != NULL)
 	{
 		LOG("T X T file I'm working with %ls \n", *p_str);
-		//__debugbreak();
-		(VOID)ScannerpScanFileInUserMode(FltObjects->Instance,
-			FltObjects->FileObject,
-			&safeToOpen);
-
-
-		LOG("GOT ANSWER: %d\n", safeToOpen);
-
-		if (!safeToOpen)
-		{
-			LOG("##*#*#*#*# NOT SAFE TO OPEN\n");
-			// Ask filter manager to undo the create
-			FltCancelFileOpen(FltObjects->Instance, FltObjects->FileObject);
-			Data->IoStatus.Status = STATUS_ACCESS_DENIED;
-			Data->IoStatus.Information = 0;
-
-			status = FLT_POSTOP_FINISHED_PROCESSING;
-		}
+		
 
 	}
 	p_str;
@@ -611,4 +567,19 @@ status will probably be STATUS_INSUFFICIENT_RESOURCES.
 
 	}
 	return status;
+}
+
+
+
+NTSTATUS
+AvScan(
+	_Inout_  PFLT_CALLBACK_DATA    Data,
+	_In_     PCFLT_RELATED_OBJECTS FltObjects,
+	_In_     AV_SCAN_MODE          ScanMode,
+	_In_     UCHAR                 IOMajorFunctionAtScan,
+	_In_     BOOLEAN               IsInTxWriter,
+	_Inout_  PAV_STREAM_CONTEXT    StreamContext
+)
+{
+
 }
