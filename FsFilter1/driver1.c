@@ -231,6 +231,40 @@ CONST FLT_OPERATION_REGISTRATION Callbacks[] = {
     { IRP_MJ_OPERATION_END }
 };
 
+
+VOID
+SectionContextCleanup(
+	_In_ PFLT_CONTEXT Context,
+	_In_ FLT_CONTEXT_TYPE ContextType
+);
+
+#define SECTION_CONTEXT_SIZE sizeof(SCAN_SECTION_CONTEXT)
+#define SECTION_CONTEXT_TAG  'scTG'
+
+FLT_CONTEXT_REGISTRATION ContextRegistration[] = {
+
+	{ FLT_SECTION_CONTEXT,
+	0,
+	SectionContextCleanup,
+	SECTION_CONTEXT_SIZE,
+	SECTION_CONTEXT_TAG },
+
+	{ FLT_CONTEXT_END }
+};
+
+
+VOID
+SectionContextCleanup(
+	_In_ PFLT_CONTEXT Context,
+	_In_ FLT_CONTEXT_TYPE ContextType
+)
+{
+	PAGED_CODE();
+
+	UNREFERENCED_PARAMETER(Context);
+	UNREFERENCED_PARAMETER(ContextType);
+}
+
 //
 //  This defines what we want to filter with FltMgr
 //
@@ -241,7 +275,7 @@ CONST FLT_REGISTRATION FilterRegistration = {
     FLT_REGISTRATION_VERSION,           //  Version
     0,                                  //  Flags
 
-    NULL,                               //  Context
+    ContextRegistration,                               //  Context
     Callbacks,                          //  Operation callbacks
 
     DriverUnload,                       //  MiniFilterUnload
@@ -341,6 +375,10 @@ Routine can return non success error codes.
         &FilterRegistration,
         &gDrv.FilterHandle);
 
+	FLT_ASSERT(NT_SUCCESS(status));
+
+	KeInitializeMutex(&gDrv.DllMessagingMutex, 0);
+	KeInitializeMutex(&gDrv.ScanningMutex, 0);
 
 	// Set up the unload routine
 	DriverObject->DriverUnload = RfUnload;

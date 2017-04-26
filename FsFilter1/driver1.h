@@ -27,6 +27,9 @@ typedef struct _DRV_GLOBAL_DATA
     PFLT_PORT               DllConnServerPort;
     struct _FLT_PORT *volatile     DllConnClientPort;
     KEVENT                  DllConnEvent;
+// ---------------------------------------------------
+	KMUTEX					DllMessagingMutex;
+	KMUTEX					ScanningMutex;
 
 } DRV_GLOBAL_DATA, *PDRV_GLOBAL_DATA;
 
